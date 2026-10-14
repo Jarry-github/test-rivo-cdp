@@ -227,6 +227,14 @@ La route `GET /api/user` utilise le middleware `auth:sanctum` et nécessite un j
 
 **Important :** dans la version actuelle, les cinq routes métier décrites plus haut ne sont pas protégées par ce middleware. Ne considérez donc pas l'API comme entièrement sécurisée pour une exposition publique en production. L'authentification et les autorisations doivent être adaptées au contexte de déploiement.
 
+## Schéma de la base de données
+
+Le schéma MySQL de l'application est disponible dans le fichier suivant :
+
+`database/schema.sql`
+
+Ce fichier contient la structure des tables et des index de la base de données. Les migrations Laravel correspondantes se trouvent dans `database/migrations/`.
+
 ## Base de données
 
 ### Table `customers`

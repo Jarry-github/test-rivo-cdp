@@ -1,58 +1,292 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# OLONA TALENTS — API de suivi client et d'événements
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Application web développée avec Laravel dans le cadre d'un test technique. Elle permet d'enregistrer des événements associés à des clients, de consulter les données et de rechercher des segments de clients à partir des propriétés de leurs événements.
 
-## About Laravel
+## Fonctionnalités
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Enregistrement d'événements associés à un client identifié par son adresse e-mail.
+- Création automatique d'un client lors de la réception de son premier événement.
+- Déduplication des événements à partir d'un `event_id` UUID lorsqu'il est fourni.
+- Consultation des clients et de leurs statistiques.
+- Consultation des événements avec pagination.
+- Segmentation des clients à partir de conditions portant sur les propriétés JSON des événements.
+- Interface web de consultation et formulaire d'enregistrement d'événements.
+- Tests automatisés des fonctionnalités principales.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Technologies
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP et Laravel
+- MySQL ou MariaDB
+- Eloquent ORM et migrations Laravel
+- Laravel Sanctum pour l'authentification par jeton
+- PHPUnit pour les tests
+- HTML, CSS et JavaScript pour l'interface
 
-## Learning Laravel
+## Prérequis
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Installer les éléments suivants :
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP compatible avec la version Laravel du projet.
+- Composer.
+- MySQL ou MariaDB.
+- Node.js et npm si vous souhaitez compiler les ressources front-end.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+Consulter `composer.json` pour les versions exactes des dépendances.
 
-## Agentic Development
+## Installation locale
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 1. Récupérer le projet
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/Jarry-github/test-rivo-cdp.git
+cd test-rivo-cdp
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Installer les dépendances PHP
 
-## Contributing
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Configurer l'environnement
 
-## Code of Conduct
+Sous Windows PowerShell :
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```powershell
+Copy-Item .env.example .env
+php artisan key:generate
+```
 
-## Security Vulnerabilities
+Modifier ensuite le fichier `.env` avec les paramètres de la base de données locale :
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```dotenv
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://127.0.0.1:8000
 
-## License
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=test_rivo_cdp
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Adapter le nom de la base, l'utilisateur et le mot de passe à votre installation. Ne jamais publier le fichier `.env`.
+
+### 4. Créer la base de données
+
+Créer une base MySQL ou MariaDB correspondant à `DB_DATABASE`, par exemple :
+
+```sql
+CREATE DATABASE test_rivo_cdp
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+```
+
+Appliquer les migrations :
+
+```bash
+php artisan migrate
+```
+
+Les migrations du dépôt construisent le schéma nécessaire. Elles incluent les tables de l'application ainsi que les tables Laravel utilisées pour les utilisateurs, les sessions, le cache, les tâches et les jetons d'accès.
+
+### 5. Lancer l'application
+
+```bash
+php artisan serve
+```
+
+Ouvrir ensuite :
+
+- Dashboard : http://127.0.0.1:8000
+- Formulaire d'événement : http://127.0.0.1:8000/events/create
+
+Si les ressources front-end doivent être compilées :
+
+```bash
+npm install
+npm run build
+```
+
+## Documentation de l'API
+
+Les routes métier ci-dessous sont définies dans `routes/api.php`. Le préfixe `/api` est ajouté automatiquement par Laravel.
+
+### 1. Enregistrer un événement
+
+**POST `/api/events`**
+
+Exemple de requête JSON :
+
+```json
+{
+  "event_id": "550e8400-e29b-41d4-a716-446655440000",
+  "email": "client@example.com",
+  "name": "Client Démo",
+  "event_name": "purchase",
+  "properties": {
+    "amount": 150000,
+    "currency": "MGA"
+  },
+  "occurred_at": "2026-10-14T10:00:00"
+}
+```
+
+Champs principaux :
+
+- `email` : obligatoire, adresse e-mail du client.
+- `event_name` : obligatoire, nom de l'événement.
+- `event_id` : UUID facultatif permettant d'identifier un événement de manière unique.
+- `name` : nom facultatif du client.
+- `properties` : objet JSON facultatif contenant les propriétés de l'événement.
+- `occurred_at` : date facultative de l'événement ; la date courante est utilisée si elle est omise.
+
+Réponse indicative pour une création réussie : HTTP `201 Created`.
+
+Une nouvelle réception avec le même `event_id` renvoie HTTP `200 OK` et `duplicate: true`, sans créer un deuxième événement. Sans `event_id`, la déduplication par identifiant n'est pas possible.
+
+### 2. Lister les clients
+
+**GET `/api/customers`**
+
+Retourne les clients avec le nombre d'événements associés. La pagination est configurée à 20 éléments par page.
+
+Exemple :
+
+```http
+GET /api/customers?page=1
+```
+
+La réponse est une collection paginée Laravel.
+
+### 3. Consulter un client
+
+**GET `/api/customers/{id}`**
+
+Exemple :
+
+```http
+GET /api/customers/1
+```
+
+Cette route permet de consulter le profil du client, ses événements récents et les statistiques d'achat calculées par le contrôleur.
+
+Si le client n'existe pas, vérifier le statut HTTP retourné par l'application.
+
+### 4. Lister les événements
+
+**GET `/api/events`**
+
+Exemple :
+
+```http
+GET /api/events?page=1
+```
+
+Retourne les événements, associés à leurs informations client, triés du plus récent au plus ancien. La pagination est configurée à 20 éléments par page.
+
+### 5. Rechercher un segment de clients
+
+**POST `/api/segments/query`**
+
+Cette route recherche les clients ayant des événements correspondant à toutes les conditions envoyées.
+
+Exemple de requête :
+
+```json
+{
+  "conditions": [
+    {
+      "event": "purchase",
+      "property": "amount",
+      "operator": ">=",
+      "value": 100000
+    },
+    {
+      "event": "purchase",
+      "property": "currency",
+      "operator": "=",
+      "value": "MGA"
+    }
+  ],
+  "limit": 50
+}
+```
+
+Opérateurs acceptés : `=`, `!=`, `>`, `>=`, `<`, `<=`.
+
+Chaque condition précise le nom de l'événement, la propriété JSON, l'opérateur et la valeur recherchée. Le champ `limit` est facultatif, avec une valeur par défaut de 50 et un maximum de 100.
+
+Les noms de propriétés sont limités à des caractères alphanumériques et au caractère `_`. Les valeurs sont transmises séparément dans les requêtes SQL.
+
+### Authentification
+
+La route `GET /api/user` utilise le middleware `auth:sanctum` et nécessite un jeton Sanctum valide.
+
+**Important :** dans la version actuelle, les cinq routes métier décrites plus haut ne sont pas protégées par ce middleware. Ne considérez donc pas l'API comme entièrement sécurisée pour une exposition publique en production. L'authentification et les autorisations doivent être adaptées au contexte de déploiement.
+
+## Base de données
+
+### Table `customers`
+
+| Colonne | Rôle |
+|---|---|
+| `id` | Clé primaire |
+| `email` | Adresse e-mail unique et obligatoire |
+| `name` | Nom du client, facultatif |
+| `created_at`, `updated_at` | Dates de création et de mise à jour |
+
+### Table `events`
+
+| Colonne | Rôle |
+|---|---|
+| `id` | Clé primaire |
+| `event_id` | UUID facultatif et unique pour la déduplication |
+| `customer_id` | Référence au client |
+| `event_name` | Nom de l'événement |
+| `properties` | Propriétés JSON de l'événement |
+| `occurred_at` | Date de survenue de l'événement |
+| `created_at`, `updated_at` | Dates de création et de mise à jour |
+
+Relations :
+
+- Un client peut posséder plusieurs événements.
+- Chaque événement appartient à un client.
+- L'adresse e-mail identifie le client lors de l'ingestion des événements.
+
+Des index sont définis pour optimiser les recherches par client, date et nom d'événement. Les migrations constituent la source de référence du schéma : `database/migrations/`.
+
+## Exécuter les tests
+
+```bash
+php artisan test
+```
+
+La configuration PHPUnit utilise une base de données de test distincte, nommée `test_rivo_cdp_testing` dans la configuration actuelle.
+
+Créer cette base avant d'exécuter les tests si elle n'existe pas. Vérifier `phpunit.xml` avant toute exécution et ne jamais remplacer la configuration de test par les paramètres de la base de développement.
+
+Les tests couvrent notamment l'enregistrement d'événements, les statistiques d'un client, la segmentation et la déduplication.
+
+## Décisions de conception et compromis
+
+- **Identification par e-mail :** permet de rattacher simplement les événements à un client. Les adresses sont normalisées en minuscules lors de l'ingestion.
+- **Propriétés JSON :** offre une structure flexible pour différents types d'événements, mais les requêtes sur les propriétés nécessitent une attention particulière aux types et aux index.
+- **Déduplication par UUID :** évite les doublons lorsque l'émetteur fournit le même `event_id`. Le champ reste facultatif pour accepter les événements qui n'en disposent pas.
+- **Segmentation par conditions :** utilise des sous-requêtes `EXISTS` pour vérifier que le client possède les événements satisfaisant chaque condition.
+- **Pagination :** limite le volume de données renvoyé par les routes de consultation.
+- **Tests automatisés :** vérifient les principaux comportements et facilitent les évolutions.
+- **Traitement synchrone :** l'enregistrement est effectué directement dans la requête HTTP. Une file de tâches pourrait être ajoutée si le volume d'événements ou les contraintes de latence l'exigent.
+- **Authentification :** Sanctum est présent, mais la protection des routes métier reste un point à finaliser avant une mise en production publique.
+
+## Données de démonstration
+
+L'application peut être testée en envoyant des requêtes à `POST /api/events`. Utiliser des adresses e-mail et des identifiants d'événements fictifs pour les démonstrations.
+
+Ne pas importer de données personnelles réelles ni partager de jetons ou de mots de passe dans le dépôt.
+
+## Dépôt source
+
+https://github.com/Jarry-github/test-rivo-cdp
